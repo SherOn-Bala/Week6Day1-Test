@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/space"
+    tools:context=".activities.CoffeeActivity">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space"
+        android:textColor="@color/title"
+        android:textSize="24sp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/vLineBreak"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/space"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        android:layout_height="0.2dp"
+        android:background="@color/title"/>
+
+    <TextView
+        android:id="@+id/tvParagraph"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space"
+        android:layout_marginBottom="@dimen/space"
+        android:textColor="@color/paragraph"
+        android:textSize="@dimen/para"
+        app:layout_constraintTop_toBottomOf="@id/vLineBreak" />
+
+    <ImageView
+        android:id="@+id/ivCoffee"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_marginTop="@dimen/space"
+        android:contentDescription="@string/cnt_coffee_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvParagraph" />
+
+    <TextView
+        android:id="@+id/tvUpdated"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space"
+        android:textColor="@color/paragraph"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        app:layout_constraintTop_toBottomOf="@id/ivCoffee" />
+</androidx.constraintlayout.widget.ConstraintLayout>
