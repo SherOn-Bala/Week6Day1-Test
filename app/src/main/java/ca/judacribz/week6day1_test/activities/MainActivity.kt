@@ -17,9 +17,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-
 class MainActivity : AppCompatActivity(), CoffeeAdapter.ItemClickListener {
-
     private var adapter: CoffeeAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,9 +69,9 @@ class MainActivity : AppCompatActivity(), CoffeeAdapter.ItemClickListener {
         }
     }
 
-    override fun onItemClicked(coffee: Coffee?) {
+    override fun onItemClicked(coffee: Coffee) {
         val intent = Intent(this, CoffeeActivity::class.java)
-        intent.putExtra(EXTRA_COFFEE_ID, coffee?.id)
+        intent.putExtra(EXTRA_COFFEE_ID, coffee.id)
         startActivity(intent)
     }
 
