@@ -20,7 +20,7 @@ import org.greenrobot.eventbus.ThreadMode
 
 class MainActivity : AppCompatActivity(), CoffeeAdapter.ItemClickListener {
 
-    var adapter: CoffeeAdapter? = null
+    private var adapter: CoffeeAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +35,6 @@ class MainActivity : AppCompatActivity(), CoffeeAdapter.ItemClickListener {
             )
         )
 
-
         getCoffeeData()
         srlRefresh.setOnRefreshListener {
             getCoffeeData()
@@ -43,7 +42,7 @@ class MainActivity : AppCompatActivity(), CoffeeAdapter.ItemClickListener {
     }
 
     private fun getCoffeeData() {
-        CoffeeHelper.getObsService().coffees
+        CoffeeHelper.obsService.coffee
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(CoffeesObserver())
@@ -59,14 +58,15 @@ class MainActivity : AppCompatActivity(), CoffeeAdapter.ItemClickListener {
         EventBus.getDefault().unregister(this)
     }
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun getCoffees(event: CoffeesEvent) {
+    fun getCoffees(event: CoffeesEvent) = updateUi(event.coffees)
+
+    private fun updateUi(coffees: List<Coffee>) {
         if (adapter == null) {
-            adapter = CoffeeAdapter(event.coffees, this)
+            adapter = CoffeeAdapter(coffees, this)
             rvCoffees.adapter = adapter
         } else {
-            adapter!!.setData(event.coffees)
+            adapter!!.setData(coffees)
             srlRefresh.isRefreshing = false
         }
     }
@@ -78,6 +78,7 @@ class MainActivity : AppCompatActivity(), CoffeeAdapter.ItemClickListener {
     }
 
     companion object {
-        const val EXTRA_COFFEE_ID: String = "ca.judacribz.week6day1_test.activities.EXTRA_COFFEE_ID"
+        const val EXTRA_COFFEE_ID: String =
+            "ca.judacribz.week6day1_test.activities.EXTRA_COFFEE_ID"
     }
 }

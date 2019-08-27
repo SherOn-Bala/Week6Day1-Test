@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Magic Leap Coffee</string>
     <string name="cnt_coffee_image">Coffee Image</string>
+    <string name="fmt_updated">Updated %s</string>
 </resources>

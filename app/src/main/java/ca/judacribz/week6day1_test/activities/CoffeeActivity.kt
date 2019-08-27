@@ -5,6 +5,7 @@ import android.view.View.GONE
 import androidx.appcompat.app.AppCompatActivity
 import ca.judacribz.week6day1_test.R
 import ca.judacribz.week6day1_test.activities.MainActivity.Companion.EXTRA_COFFEE_ID
+import ca.judacribz.week6day1_test.model.Coffee
 import ca.judacribz.week6day1_test.model.datasource.remote.CoffeeHelper
 import ca.judacribz.week6day1_test.model.datasource.remote.CoffeeObserver
 import ca.judacribz.week6day1_test.model.events.CoffeeEvent
@@ -25,10 +26,12 @@ class CoffeeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_coffee)
         val coffeeId: String? = intent.getStringExtra(EXTRA_COFFEE_ID)
 
-        CoffeeHelper.getObsService().getCoffee(coffeeId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(CoffeeObserver())
+        if (coffeeId != null) {
+            CoffeeHelper.obsService.getCoffee(coffeeId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(CoffeeObserver())
+        }
     }
 
     override fun onStart() {
@@ -42,28 +45,35 @@ class CoffeeActivity : AppCompatActivity() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun getCoffee(event: CoffeeEvent) {
-        val coffee = event.coffee
+    fun getCoffee(event: CoffeeEvent) = updateUi(event.coffee)
 
+    private fun updateUi(coffee: Coffee) {
         tvTitle.text = coffee.name
         tvParagraph.text = coffee.desc
 
-
         val url = coffee.imageUrl
-        if (!url.isEmpty()) {
+        if (url!!.isNotEmpty()) {
             Glide.with(this).load(url).into(ivCoffee)
         } else {
             ivCoffee.visibility = GONE
         }
-        val str = coffee.lastUpdatedAt
-        val date = getDate(str.substring(0, str.indexOf(" ")))
-        tvUpdated.text = "Updated $date"
+
+        val lastUpdatedStr = coffee.lastUpdatedAt
+        if (lastUpdatedStr!!.isNotBlank()) {
+            val date =
+                getDate((lastUpdatedStr.substring(0, lastUpdatedStr.indexOf(" "))))
+
+            tvUpdated.text = String.format(
+                Locale.US,
+                getString(R.string.fmt_updated),
+                date
+            )
+        }
     }
 
-    private fun getDate(lastUpdatedAt: String): String {
-        val date = inDateFormat.parse(lastUpdatedAt)
-        return outDateFormat.format(date!!)
-    }
+    private fun getDate(lastUpdatedAt: String): String =
+        outDateFormat.format(inDateFormat.parse(lastUpdatedAt)!!)
+
 
     companion object {
         private val inDateFormat = SimpleDateFormat("yyyy-M-d", Locale.US)
